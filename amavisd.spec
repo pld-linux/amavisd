@@ -24,6 +24,8 @@ BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-MIME-tools
 BuildRequires:	perl-Unix-Syslog
 BuildRequires:	perl-devel
+BuildRequires:	perl-Convert-UUlib
+BuildRequires:	perl-Convert-TNEF
 BuildRequires:	sh-utils
 BuildRequires:	unarj
 BuildRequires:	unrar
