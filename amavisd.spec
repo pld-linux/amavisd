@@ -3,7 +3,7 @@ Summary:	A Mail Virus Scanner - Daemon
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	0.1
-Release:	2
+Release:	3
 Epoch:		1
 License:	GPL
 Group:		Applications/Mail
@@ -56,6 +56,7 @@ Requires:	amavisd-daemon
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	AMaViS
 Obsoletes:	amavis
+Obsoletes:	amavisd-new
 
 %description
 AMaViS is a script that interfaces a mail transport agent (MTA) with
@@ -69,13 +70,13 @@ a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
 Summary:	A Mail Virus Scanner - postfix back-end
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - back-end dla postfiksa
 Group:		Applications/Mail
+Requires:	amavisd
+Requires:	postfix
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
 Obsoletes:	amavisd-exim
 Obsoletes:	amavisd-qmail
 Obsoletes:	amavisd-sendmail
-Requires:	amavisd
-Requires:	postfix
 
 %description postfix
 AMaViS is a script that interfaces a mail transport agent (MTA) with
@@ -93,13 +94,13 @@ Pakiet ten zawiera back-end dla postfiks.
 Summary:	A Mail Virus Scanner - exim backend
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla exima
 Group:		Applications/Mail
+Requires:	amavisd
+Requires:	exim
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
 Obsoletes:	amavisd-postfix
 Obsoletes:	amavisd-qmail
 Obsoletes:	amavisd-sendmail
-Requires:	amavisd
-Requires:	exim
 
 %description exim
 AMaViS is a script that interfaces a mail transport agent (MTA) with
@@ -118,13 +119,13 @@ Pakiet ten zawiera back-end dla exima.
 Summary:	A Mail Virus Scanner - qmail backend.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla qmaila
 Group:		Applications/Mail
+Requires:	amavisd
+Requires:	qmail
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
 Obsoletes:	amavisd-postfix
 Obsoletes:	amavisd-exim
 Obsoletes:	amavisd-sendmail
-Requires:	amavisd
-Requires:	qmail
 
 %description qmail
 AMaViS is a script that interfaces a mail transport agent (MTA) with
@@ -142,13 +143,13 @@ Pakiet ten zawiera back-end dla qmaila.
 Summary:	A Mail Virus Scanner - sendmail backend
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla sendmaila
 Group:		Applications/Mail
+Requires:	amavisd
+Requires:	sendmail
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
 Obsoletes:	amavisd-postfix
 Obsoletes:	amavisd-exim
 Obsoletes:	amavisd-qmail
-Requires:	amavisd
-Requires:	sendmail
 
 %description sendmail
 AMaViS is a script that interfaces a mail transport agent (MTA) with
