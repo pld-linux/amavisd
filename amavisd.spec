@@ -3,7 +3,7 @@ Summary:	A Mail Virus Scanner - Daemon.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	20010714
-Release:	4
+Release:	5
 License:	GPL
 Group:		Applications/Mail
 Source0:	http://www.amavis.org/dist/perl/%{name}-snapshot-%{version}.tar.gz
@@ -38,6 +38,7 @@ Requires:	sh-utils
 Requires:	unarj
 Requires:	unrar
 Requires:	zoo
+Requires:	amavisd-daemon
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -48,6 +49,46 @@ one or more virus scanners. This is daemonized version of amavis.
 AMaViS to skrypt po¶rednicz±cy pomiêdzy agentem transferu poczty (MTA)
 a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
 
+%package postfix
+Summary:	A Mail Virus Scanner - postfix back-end.
+Summary(pl):	Antywirusowy skaner poczty elektronicznej - back-end dla postfiksa
+Group:		Applications/Mail
+Provides:	amavisd-daemon
+Obsoletes:	amavisd-exim
+Requires:	postfix
+
+%description postfix
+AMaViS is a script that interfaces a mail transport agent (MTA) with
+one or more virus scanners. This is daemonized version of amavis.
+
+This package contains backend for postfix.
+
+%description postfix -l pl
+AMaViS to skrypt po¶rednicz±cy pomiêdzy agentem transferu poczty (MTA)
+a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
+
+Pakiet ten zawiera back-end dla postfiks.
+
+%package exim
+Summary:	A Mail Virus Scanner - exim backend.
+Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla exima
+Group:		Applications/Mail
+Provides:	amavisd-daemon
+Obsoletes:	amavisd-postfix
+Requires:	exim
+
+%description exim
+AMaViS is a script that interfaces a mail transport agent (MTA) with
+one or more virus scanners. This is daemonized version of amavis.
+
+This package contains backend for exim.
+
+%description exim -l pl
+AMaViS to skrypt po¶rednicz±cy pomiêdzy agentem transferu poczty (MTA)
+a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
+
+Pakiet ten zawiera back-end dla exima.
+
 %prep
 %setup -q -n %{name}-snapshot-%{version}
 
@@ -55,6 +96,7 @@ a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
 autoconf
 %configure \
 	--enable-smtp \
+	--enable-postfix \
 	--enable-all \
 	--enable-syslog \
 	--with-runtime-dir=%{_var}/spool/amavis/runtime \
@@ -64,6 +106,21 @@ autoconf
 	--with-sockname=%{_var}/run/amavisd/amavisd.sock
 
 %{__make}
+mv amavis/amavisd amavis/amavisd.postfix
+
+%configure \
+	--disable-smtp \
+	--enable-exim \
+	--enable-all \
+	--enable-syslog \
+	--with-runtime-dir=%{_var}/spool/amavis/runtime \
+	--with-virusdir=%{_var}/spool/amavis/virusmails \
+	--with-logdir=%{_var}/log \
+	--with-amavisuser=amavis \
+	--with-sockname=%{_var}/run/amavisd/amavisd.sock
+
+%{__make}
+cp amavis/amavisd amavis/amavisd.exim
 
 gzip -9nf README* NEWS AUTHORS BUGS ChangeLog FAQ HINTS TODO doc/amavis.html
 
@@ -76,15 +133,24 @@ install -d $RPM_BUILD_ROOT{%{_var}/spool/amavis,%{_var}/run/amavisd}
 	DESTDIR=$RPM_BUILD_ROOT
 install -D %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/%{name}
 
+install amavis/amavisd.{exim,postfix} $RPM_BUILD_ROOT%{_sbindir}
+
 %files
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_sbindir}/amavisd
 %attr(755,root,root) %{_sbindir}/amavis
 %attr(754,root,root) %{_sysconfdir}/rc.d/init.d/*
 %config(noreplace) %{_sysconfdir}/amavisd.conf
 %doc *.gz doc/*.gz doc/amavis.png
 %attr(750,amavis,root) %{_var}/spool/amavis
 %attr(755,amavis,root) %{_var}/run/amavisd
+
+%files postfix
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_sbindir}/amavisd.postfix
+
+%files exim
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_sbindir}/amavisd.exim
 
 %pre
 if [ -n "`id -u amavis 2>/dev/null`" ]; then
@@ -116,6 +182,28 @@ if [ "$1" = "0" ];then
                 /etc/rc.d/init.d/amavisd stop >&2
         fi
         /sbin/chkconfig --del amavisd
+fi
+
+%post exim
+if [ -f %{_sbindir}/amavisd ]; then
+    rm -f %{_sbindir}/amavisd
+fi
+ln -s amavisd.exim %{_sbindir}/amavisd
+
+%postun exim
+if [ -f %{_sbindir}/amavisd ]; then
+    rm -f %{_sbindir}/amavisd
+fi
+
+%post postfix
+if [ -f %{_sbindir}/amavisd ]; then
+    rm -f %{_sbindir}/amavisd
+fi
+ln -s amavisd.postfix %{_sbindir}/amavisd
+
+%postun postfix
+if [ -f %{_sbindir}/amavisd ]; then
+    rm -f %{_sbindir}/amavisd
 fi
 
 %clean
