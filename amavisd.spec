@@ -69,6 +69,7 @@ Obsoletes:	amavisd-daemon
 Obsoletes:	amavisd-exim
 Obsoletes:	amavisd-qmail
 Obsoletes:	amavisd-sendmail
+Requires:	amavisd
 Requires:	postfix
 
 %description postfix
@@ -92,6 +93,7 @@ Obsoletes:	amavisd-daemon
 Obsoletes:	amavisd-postfix
 Obsoletes:	amavisd-qmail
 Obsoletes:	amavisd-sendmail
+Requires:	amavisd
 Requires:	exim
 
 %description exim
@@ -116,6 +118,7 @@ Pakiet ten zawiera back-end dla exima.
 #Obsoletes:	amavisd-postfix
 #Obsoletes:	amavisd-exim
 #Obsoletes:	amavisd-sendmail
+#Requires:	amavisd
 #Requires:	qmailmta
 #
 #%description qmail
@@ -139,6 +142,7 @@ Obsoletes:	amavisd-daemon
 Obsoletes:	amavisd-postfix
 Obsoletes:	amavisd-exim
 Obsoletes:	amavisd-qmail
+Requires:	amavisd
 Requires:	sendmail
 
 %description sendmail
