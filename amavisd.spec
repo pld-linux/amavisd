@@ -308,7 +308,7 @@ ln -sf amavisd.sendmail %{_sbindir}/amavisd
 %doc README* NEWS AUTHORS BUGS ChangeLog FAQ HINTS TODO doc/amavis.html doc/amavis.png
 %attr(755,root,root) %{_sbindir}/amavis
 %attr(754,root,root) /etc/rc.d/init.d/*
-%config(noreplace) %{_sysconfdir}/amavisd.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/amavisd.conf
 %attr(750,amavis,root) %{_var}/spool/amavis
 %attr(755,amavis,root) %{_var}/run/amavisd
 
