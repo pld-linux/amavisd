@@ -16,7 +16,7 @@ Patch4:		%{name}-clamav.patch
 URL:		http://www.amavis.org/
 BuildRequires:	arc
 BuildRequires:	autoconf
-BuildRequires:  automake
+BuildRequires:	automake
 BuildRequires:	bzip2
 BuildRequires:	file
 BuildRequires:	lha
