@@ -6,19 +6,6 @@ Version:	20010714
 Release:	2
 License:	GPL
 Group:		Applications/Mail
-Group(cs):	Aplikace/Po¹ta
-Group(da):	Programmer/Post
-Group(de):	Applikationen/Post
-Group(es):	Aplicaciones/Correo Electrónico
-Group(fr):	Applications/Courrier
-Group(is):	Forrit/Póst
-Group(it):	Applicazioni/Posta
-Group(no):	Applikasjoner/Epost
-Group(pl):	Aplikacje/Poczta
-Group(pt):	Aplicações/Correio Eletrônico
-Group(ru):	ğÒÉÌÏÖÅÎÉÑ/üÌÅËÔÒÏÎÎÁÑ ĞÏŞÔÁ
-Group(sl):	Programi/Po¹tna
-Group(sv):	Tillämpningar/Post
 Source0:	http://www.amavis.org/dist/perl/%{name}-snapshot-%{version}.tar.gz
 Source1:	%{name}.init
 URL:		http://www.amavis.org/
