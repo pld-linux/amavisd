@@ -17,6 +17,7 @@ Patch3:		%{name}-mks_vir.patch
 Patch4:		%{name}-clamav.patch
 Patch5:		%{name}-mks_vir-mksd.patch
 Patch6:		%{name}-qmail-new.patch
+Patch7:		%{name}-acx_pthread.patch
 URL:		http://www.amavis.org/
 BuildRequires:	arc
 BuildRequires:	autoconf
@@ -172,12 +173,13 @@ Pakiet ten zawiera back-end dla sendmaila.
 #%patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %build
 rm -f missing
 %{__aclocal}
-%{__autoconf}
 %{__automake}
+%{__autoconf}
 %configure \
 	--enable-smtp \
 	--enable-postfix \
