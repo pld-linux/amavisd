@@ -1,0 +1,23 @@
+diff -Nru amavisd-snapshot-20010714.orig/configure.in amavisd-snapshot-20010714/configure.in
+--- amavisd-snapshot-20010714.orig/configure.in	Sat Jul 14 18:23:35 2001
++++ amavisd-snapshot-20010714/configure.in	Sat Apr 20 17:35:51 2002
+@@ -153,7 +153,8 @@
+ dnl unless --disable-qmail specified
+ dnl
+ 
+-AC_PATH_PROGS(qmailinject, qmail-inject, /bin/false, /var/qmail/bin:/usr/local/qmail/bin)
++qmailinject=/usr/lib/qmail/qmail-inject
++AC_SUBST(qmailinject)
+ 
+ qmaildir=`dirname $qmailinject`
+ AC_SUBST(qmaildir)
+@@ -163,8 +164,7 @@
+     [  --enable-qmail                use qmail as MTA],
+     if test "x$enableval" != "xno" ; then
+       MTA=qmail
+-    fi,
+-    MTA=qmail)
++    fi)
+ fi
+ 
+ AC_ARG_ENABLE(milter,
