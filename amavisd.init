@@ -25,7 +25,6 @@ case "$1" in
 	if [ ! -f /var/lock/subsys/amavisd ]; then
 		msg_starting Amavisd
 		daemon 'su -s /bin/bash amavis -c "/usr/sbin/amavisd"'
-		chmod a+w /var/run/amavisd/amavisd.sock
 		touch /var/lock/subsys/amavisd
 	else
 		msg_Already_Running Amavisd

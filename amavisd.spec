@@ -3,7 +3,7 @@ Summary:	A Mail Virus Scanner - Daemon.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	20010714
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/Mail
 Group(cs):	Aplikace/Po¹ta
@@ -71,7 +71,7 @@ autoconf
 	--enable-all \
 	--enable-syslog \
 	--with-runtime-dir=%{_var}/spool/amavis/runtime \
-	--with-virusdir=/var/spool/amavis/virusmails \
+	--with-virusdir=%{_var}/spool/amavis/virusmails \
 	--with-logdir=%{_var}/log \
 	--with-amavisuser=amavis \
 	--with-sockname=%{_var}/run/amavisd/amavisd.sock
