@@ -8,9 +8,13 @@ License:	GPL
 Group:		Applications/Mail
 Source0:	http://www.amavis.org/dist/perl/%{name}-snapshot-%{version}.tar.gz
 Source1:	%{name}.init
+Patch0:		%{name}-notest-mta.patch
+Patch1:		%{name}-nomilter.patch
+Patch2:		%{name}-qmail.patch
 URL:		http://www.amavis.org/
 BuildRequires:	arc
 BuildRequires:	autoconf
+BuildRequires:  automake
 BuildRequires:	bzip2
 BuildRequires:	file
 BuildRequires:	lha
@@ -132,9 +136,14 @@ Pakiet ten zawiera back-end dla sendmaila.
 
 %prep
 %setup -q -n %{name}-snapshot-%{version}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %build
+aclocal
 autoconf
+automake -a -c -f
 %configure \
 	--enable-smtp \
 	--enable-postfix \
@@ -264,18 +273,14 @@ fi
 %post exim
 ln -sf amavisd.exim %{_sbindir}/amavisd
 
-
 %post postfix
 ln -sf amavisd.postfix %{_sbindir}/amavisd
-
 
 %post qmail
 ln -sf amavisd.qmail %{_sbindir}/amavisd
 
-
 %post sendmail
 ln -sf amavisd.sendmail %{_sbindir}/amavisd
-
 
 %clean
 rm -rf $RPM_BUILD_ROOT
