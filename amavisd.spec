@@ -1,5 +1,5 @@
 %include	/usr/lib/rpm/macros.perl
-Summary:	A Mail Virus Scanner - Daemon.
+Summary:	A Mail Virus Scanner - Daemon
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	20020300
@@ -61,7 +61,7 @@ AMaViS to skrypt po¶rednicz±cy pomiêdzy agentem transferu poczty (MTA)
 a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
 
 %package postfix
-Summary:	A Mail Virus Scanner - postfix back-end.
+Summary:	A Mail Virus Scanner - postfix back-end
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - back-end dla postfiksa
 Group:		Applications/Mail
 Provides:	amavisd-daemon
@@ -84,7 +84,7 @@ a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
 Pakiet ten zawiera back-end dla postfiks.
 
 %package exim
-Summary:	A Mail Virus Scanner - exim backend.
+Summary:	A Mail Virus Scanner - exim backend
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla exima
 Group:		Applications/Mail
 Provides:	amavisd-daemon
@@ -131,7 +131,7 @@ Pakiet ten zawiera back-end dla exima.
 #Pakiet ten zawiera back-end dla qmaila.
 
 %package sendmail
-Summary:	A Mail Virus Scanner - sendmail backend.
+Summary:	A Mail Virus Scanner - sendmail backend
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla sendmaila
 Group:		Applications/Mail
 Provides:	amavisd-daemon
