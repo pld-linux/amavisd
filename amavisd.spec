@@ -3,7 +3,7 @@ Summary:	A Mail Virus Scanner - Daemon.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	20020300
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/Mail
 Source0:	http://www.amavis.org/dist/perl/%{name}-snapshot-%{version}.tar.gz
@@ -33,7 +33,11 @@ BuildRequires:	sh-utils
 BuildRequires:	unarj
 BuildRequires:	unrar
 BuildRequires:	zoo
-Requires:	%{_libdir}/sendmail
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/useradd
+Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/userdel
+Requires:	/usr/lib/sendmail
 Requires:	arc
 Requires:	bzip2
 Requires:	file
@@ -232,6 +236,49 @@ install amavis/amavisd.{exim,postfix,sendmail} $RPM_BUILD_ROOT%{_sbindir}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%pre
+if [ -n "`id -u amavis 2>/dev/null`" ]; then
+	if [ "`id -u amavis`" != "97" ]; then
+		echo "Error: user amavis doesn't have uid=97. Correct this before installing amavis." 1>&2
+		exit 1
+	fi
+else
+	/usr/sbin/useradd -u 97 -r -d %{_var}/spool/amavis -s /bin/false -c "Anti Virus Checker" -g nobody  amavis 1>&2
+fi
+
+%postun
+if [ "$1" = "0" ]; then
+	/usr/sbin/userdel amavis
+fi
+
+%post
+/sbin/chkconfig --add amavisd
+if [ -f /var/lock/subsys/amavisd ]; then
+	/etc/rc.d/init.d/amavisd restart >&2
+else
+	echo "Run \"/etc/rc.d/init.d/amavisd start\" to start Amavisd daemon."
+fi
+
+%preun
+if [ "$1" = "0" ];then
+	if [ -f /var/lock/subsys/amavisd ]; then
+		/etc/rc.d/init.d/amavisd stop >&2
+	fi
+	/sbin/chkconfig --del amavisd
+fi
+
+%post exim
+ln -sf amavisd.exim %{_sbindir}/amavisd
+
+%post postfix
+ln -sf amavisd.postfix %{_sbindir}/amavisd
+
+#%post qmail
+#ln -sf amavisd.qmail %{_sbindir}/amavisd
+
+%post sendmail
+ln -sf amavisd.sendmail %{_sbindir}/amavisd
+
 %files
 %defattr(644,root,root,755)
 %doc README* NEWS AUTHORS BUGS ChangeLog FAQ HINTS TODO doc/amavis.html doc/amavis.png
@@ -256,47 +303,3 @@ rm -rf $RPM_BUILD_ROOT
 %files sendmail
 %attr(755,root,root) %{_sbindir}/amavisd.sendmail
 %ghost %attr(777,root,root) %{_sbindir}/amavisd
-
-%pre
-if [ -n "`id -u amavis 2>/dev/null`" ]; then
-        if [ "`id -u amavis`" != "97" ]; then
-                echo "Warning: user amavis haven't uid=97. Correct this before installing amavis" 1>&2
-                exit 1
-        fi
-else
-        %{_sbindir}/useradd -u 97 -r -d %{_var}/spool/amavis  -s /bin/false -c "Anti Virus Checker" -g nobody  amavis 1>&2
-fi
-
-%postun
-if [ "$1" = "0" ]; then
-        %{_sbindir}/userdel amavis
-fi
-
-%post
-/sbin/chkconfig --add amavisd
-
-if [ -f %{_var}/lock/subsys/amavisd ]; then
-        /etc/rc.d/init.d/amavisd restart >&2
-else
-        echo "Run \"/etc/rc.d/init.d/amavisd start\" to start Amavisd daemon."
-fi
-
-%preun
-if [ "$1" = "0" ];then
-        if [ -f %{_var}/lock/subsys/amavisd ]; then
-                /etc/rc.d/init.d/amavisd stop >&2
-        fi
-        /sbin/chkconfig --del amavisd
-fi
-
-%post exim
-ln -sf amavisd.exim %{_sbindir}/amavisd
-
-%post postfix
-ln -sf amavisd.postfix %{_sbindir}/amavisd
-
-#%post qmail
-#ln -sf amavisd.qmail %{_sbindir}/amavisd
-
-%post sendmail
-ln -sf amavisd.sendmail %{_sbindir}/amavisd
