@@ -3,7 +3,7 @@ Summary:	A Mail Virus Scanner - Daemon.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	20010714
-Release:	8
+Release:	9
 License:	GPL
 Group:		Applications/Mail
 Source0:	http://www.amavis.org/dist/perl/%{name}-snapshot-%{version}.tar.gz
@@ -226,19 +226,19 @@ install amavis/amavisd.{exim,postfix,qmail,sendmail} $RPM_BUILD_ROOT%{_sbindir}
 
 %files exim
 %attr(755,root,root) %{_sbindir}/amavisd.exim
-%ghost %{_sbindir}/amavisd
+%ghost %attr(777,root,root) %{_sbindir}/amavisd
 
 %files postfix
 %attr(755,root,root) %{_sbindir}/amavisd.postfix
-%ghost %{_sbindir}/amavisd
+%ghost %attr(777,root,root) %{_sbindir}/amavisd
 
 %files qmail
 %attr(755,root,root) %{_sbindir}/amavisd.qmail
-%ghost %{_sbindir}/amavisd
+%ghost %attr(777,root,root) %{_sbindir}/amavisd
 
 %files sendmail
 %attr(755,root,root) %{_sbindir}/amavisd.sendmail
-%ghost %{_sbindir}/amavisd
+%ghost %attr(777,root,root) %{_sbindir}/amavisd
 
 %pre
 if [ -n "`id -u amavis 2>/dev/null`" ]; then
@@ -285,4 +285,4 @@ ln -sf amavisd.qmail %{_sbindir}/amavisd
 ln -sf amavisd.sendmail %{_sbindir}/amavisd
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+#rm -rf $RPM_BUILD_ROOT
