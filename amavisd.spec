@@ -157,6 +157,7 @@ a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
 
 Pakiet ten zawiera back-end dla sendmaila.
 
+%define no_install_post_chrpath 1
 %prep
 %setup -q -n %{name}-snapshot-%{version}
 %patch0 -p1
