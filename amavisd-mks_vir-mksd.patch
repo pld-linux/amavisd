@@ -1,0 +1,115 @@
+--- amavisd-0.1/amavis/amavisd.conf.in	Fri Mar  7 18:07:55 2003
++++ amavisd-0.1-aqq/amavis/amavisd.conf.in	Sun May 18 16:48:17 2003
+@@ -105,6 +105,9 @@
+ # MkS_Vir for Linux (beta)
+ $mks = "@mks@";
+ 
++# MkS_Vir Daemon for Linux (beta)
++$mksd = "@mksd@";
++
+ # Norman Virus Control 
+ $norman = "@norman@";
+ 
+--- amavisd-0.1/amavis/amavisd.in	Tue Mar  4 20:00:43 2003
++++ amavisd-0.1-aqq/amavis/amavisd.in	Sun May 18 16:51:03 2003
+@@ -56,7 +56,7 @@
+ 
+ # Av scanners and related vars
+ use vars qw ( $antivir $avp $avpdc $AVPDIR $clamscan $clamd $csav $drweb $fprot
+-  $fprotd $fsav $ikarus $inocucmd $mks $nod32 $nod32cli $norman $oav $panda
++  $fprotd $fsav $ikarus $inocucmd $mks $mksd $nod32 $nod32cli $norman $oav $panda
+   $rav $sophos $sophos_ide_path $cscmdline $scs_host $scs_port $uvscan $vbengcl
+   $vexira $vfind $vscan $sophie_sockname $trophie_sockname );
+ 
+@@ -353,6 +353,7 @@
+ @hbedv_scanner_frag@
+ @ikarus_scanner_frag@
+ @mks_scanner_frag@
++@mksd_scanner_frag@
+ @nai_scanner_frag@
+ @nod32_scanner_frag@
+ @nod32cli_scanner_frag@
+--- amavisd-0.1/amavis/av/mksd	Thu Jan  1 01:00:00 1970
++++ amavisd-0.1-aqq/amavis/av/mksd	Sun May 18 16:48:17 2003
+@@ -0,0 +1,29 @@
++#
++# MkS_Vir Daemon for Linux (beta)
++#
++
++if ($mksd) {
++    my (@mksd_nok, @mksd_vir, $mksd_v, %mksd_hash);
++    do_log(2,"Using $mksd");
++
++    chop($output = `$mksd -s $TEMPDIR/parts/* 2>&1`);
++    $errval = retcode($?);
++    do_log(2,$output);
++
++    @mksd_nok = grep { $_ !~ /^OK / } split /\n/, $output;
++    @mksd_vir = grep { $_ !~ /^ERR / and $_ !~ /^AWARIA/ } @mksd_nok;
++
++    if (scalar(@mksd_nok) == 0) {			# no errors, no viruses
++	$scanner_errors = 0;
++    } elsif (scalar(@mksd_vir) != 0) {			# virus(es) found
++	$scanner_errors = 0;
++	foreach $mksd_v (map { split / /; $_[1] } @mksd_vir) {
++		$mksd_hash{$mksd_v}++;
++	}
++	@virusname = map { "$_ (".$mksd_hash{$_}.")" } keys %mksd_hash;
++	do_virus($output);
++    } else {						# scanner error
++	do_log(0, "Virus scanner ERROR: $mksd (error code: $errval)");
++    }
++}
++
+--- amavisd-0.1/configure.in	Wed Feb 19 15:13:56 2003
++++ amavisd-0.1-aqq/configure.in	Sun May 18 16:52:50 2003
+@@ -213,7 +213,7 @@
+ 
+      AC_CHECK_HEADERS(sm/gen.h,
+        [AC_EGREP_HEADER([typedef.*bool],sm/gen.h,
+-          [AC_DEFINE(HAVE_SM_GEN_BOOL_TYPE, 1,
++          [AC_DEFINE([HAVE_SM_GEN_BOOL_TYPE], 1,
+                      [ Define if <sm/gen.h> defines the bool type. ])])])
+ 
+      # maybe sendmail is using sfio (for TLS encryption)
+@@ -398,6 +398,7 @@
+   fsec_scanner_frag=$srcdir/amavis/av/fsec
+   hbedv_scanner_frag=$srcdir/amavis/av/hbedv
+   mks_scanner_frag=$srcdir/amavis/av/mks
++  mksd_scanner_frag=$srcdir/amavis/av/mksd
+   nai_scanner_frag=$srcdir/amavis/av/nai
+   nod32_scanner_frag=$srcdir/amavis/av/nod32
+   nod32cli_scanner_frag=$srcdir/amavis/av/nod32cli
+@@ -576,6 +577,15 @@
+   mks_scanner_frag=$srcdir/amavis/av/mks
+ fi
+ 
++### MkS_Vir Daemon for Linux
++mksd_scanner_frag=/dev/null
++AC_CHECKING([*** MkS_Vir Daemon for Linux ***])
++AC_PATH_PROG(mksd, mkschk, , $PATH:/usr/bin)
++if test "x$mksd" != "x" ; then
++  avscanner="$avscanner MkS_Vir Daemon for Linux"
++  mksd_scanner_frag=$srcdir/amavis/av/mksd
++fi
++
+ ### ESET Software NOD32
+ nod32_scanner_frag=/dev/null
+ AC_CHECKING([*** ESET Software NOD32 ***])
+@@ -755,7 +765,7 @@
+ fi
+ 
+ AC_MSG_CHECKING([if any virus scanners are installed at all])
+-if test "x$antivir$uvscan$ufindvir$fvsco$sophos$avp$avpdc$fsav$vscan$vfind$inocucmd$rav$nod32$nod32cli$csav$vbengcl$sophie$trophie$panda$fprot$fprotd$oav$cscmdline$drweb$mks$vexira$norman$clamscan$clamd$ikarus" = "x" ; then
++if test "x$antivir$uvscan$ufindvir$fvsco$sophos$avp$avpdc$fsav$vscan$vfind$inocucmd$rav$nod32$nod32cli$csav$vbengcl$sophie$trophie$panda$fprot$fprotd$oav$cscmdline$drweb$mks$mksd$vexira$norman$clamscan$clamd$ikarus" = "x" ; then
+   AC_MSG_RESULT(no)
+   AC_MSG_ERROR([
+ 
+@@ -935,6 +945,7 @@
+ AC_SUBST_FILE(hbedv_scanner_frag)
+ AC_SUBST_FILE(vexira_scanner_frag)
+ AC_SUBST_FILE(mks_scanner_frag)
++AC_SUBST_FILE(mksd_scanner_frag)
+ AC_SUBST_FILE(nai_scanner_frag)
+ AC_SUBST_FILE(nod32_scanner_frag)
+ AC_SUBST_FILE(nod32cli_scanner_frag)

@@ -1,0 +1,38 @@
+--- ./amavis/amavis.c.orig	Thu Sep 12 19:11:47 2002
++++ ./amavis/amavis.c	Thu Sep 12 19:43:30 2002
+@@ -186,6 +186,7 @@
+ next_qmail_envelope(char *first, char *last)
+ {
+     static char *p = NULL, *q;
++    char *tmp;
+ 
+     if (!p) {
+ 	p = first;
+@@ -196,12 +197,15 @@
+     /* get args from first */
+     if (p < q) {
+ 	if (*p == 'T' || *p == 'F') {
+-	    return p+1;
++	    tmp = p+1;
++
++	    /* increase p _before_ we return */
++	    p += strlen(p) + 1;
++	    return tmp;
+ 	} else {
+ 	    mydebug(DBG_FATAL, "qmail envelope format error (F/T)");
+ 	    exit(EX_TEMPFAIL);
+ 	}
+-	p += strlen(p) + 1;
+     }
+ 
+     return NULL;
+--- ./amavis/mta/qmail_init.orig	Thu Sep 12 19:11:33 2002
++++ ./amavis/mta/qmail_init	Thu Sep 12 19:08:12 2002
+@@ -15,6 +15,6 @@
+ #}
+ 
+ # set path explicitly
+-$ENV{PATH} = "$QMAILDIR:/bin:/usr/bin:/usr/local/bin";
++$ENV{PATH} = "/bin:/usr/bin:/usr/local/bin";
+ 
+ # End qmail
