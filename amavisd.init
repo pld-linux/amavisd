@@ -45,12 +45,12 @@ case "$1" in
   status)
 	status amavisd
 	;;
-  restart)
+  restart|reload)
 	$0 stop
 	$0 start
 	;;
   *)
-	msg_usage "$0 {start|stop|status|restart}"
+	msg_usage "$0 {start|stop|restart|reload|status}"
 	exit 1
 esac
 
