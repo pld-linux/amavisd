@@ -164,7 +164,7 @@ Pakiet ten zawiera back-end dla sendmaila.
 
 %define no_install_post_chrpath 1
 %prep
-%setup -q 
+%setup -q
 #-n %{name}-snapshot-%{version}
 #%patch0 -p1
 #%patch1 -p1
