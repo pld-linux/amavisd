@@ -1,9 +1,12 @@
 %include	/usr/lib/rpm/macros.perl
+
+%bcond_with	qmail		# enable qmail
+
 Summary:	A Mail Virus Scanner - Daemon
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	0.1
-Release:	4
+Release:	5
 Epoch:		1
 License:	GPL
 Group:		Applications/Mail
@@ -317,10 +320,12 @@ ln -sf amavisd.sendmail %{_sbindir}/amavisd
 %attr(755,root,root) %{_sbindir}/amavisd.postfix
 %ghost %attr(777,root,root) %{_sbindir}/amavisd
 
+%if %{with qmail}
 %files qmail
 %attr(755,root,root) %{_sbindir}/amavis.qmail-queue
 %attr(755,root,root) %{_sbindir}/amavisd.qmail
 %ghost %attr(777,root,root) %{_sbindir}/amavisd
+%endif
 
 %files sendmail
 %attr(755,root,root) %{_sbindir}/amavisd.sendmail
