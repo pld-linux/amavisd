@@ -1,19 +1,19 @@
 diff -urN amavisd-orig/amavis/amavisd.conf.in amavisd-snapshot-20010714/amavis/amavisd.conf.in
---- amavisd-orig/amavis/amavisd.conf.in	Sat Apr 20 19:40:18 2002
-+++ amavisd-snapshot-20010714/amavis/amavisd.conf.in	Sat Apr 20 19:49:48 2002
+--- amavisd-orig/amavis/amavisd.conf.in	Sat Apr 20 20:22:04 2002
++++ amavisd-snapshot-20010714/amavis/amavisd.conf.in	Sat Apr 20 20:23:19 2002
 @@ -25,6 +25,9 @@
  # NOTE: don't forget to re-run ./configure if you want to use
  # another virus scanner!
  
 +# mks_vir Antivirus (mks32)
-+$mksvir = "@mksvir";
++$mksvir = "@mksvir@";
 +
  # NAI AntiVirus (uvscan)
  $uvscan = "@uvscan@";
  $uvscan_args = "@uvscan_args@";
 diff -urN amavisd-orig/amavis/amavisd.in amavisd-snapshot-20010714/amavis/amavisd.in
---- amavisd-orig/amavis/amavisd.in	Sat Apr 20 19:40:18 2002
-+++ amavisd-snapshot-20010714/amavis/amavisd.in	Sat Apr 20 19:50:13 2002
+--- amavisd-orig/amavis/amavisd.in	Sat Apr 20 20:22:04 2002
++++ amavisd-snapshot-20010714/amavis/amavisd.in	Sat Apr 20 20:22:51 2002
 @@ -82,7 +82,7 @@
  # Virus related
  
@@ -33,8 +33,8 @@ diff -urN amavisd-orig/amavis/amavisd.in amavisd-snapshot-20010714/amavis/amavis
  @sophos_scanner_frag@
 diff -urN amavisd-orig/amavis/av/mksvir amavisd-snapshot-20010714/amavis/av/mksvir
 --- amavisd-orig/amavis/av/mksvir	Thu Jan  1 01:00:00 1970
-+++ amavisd-snapshot-20010714/amavis/av/mksvir	Sat Apr 20 19:49:56 2002
-@@ -0,0 +1,37 @@
++++ amavisd-snapshot-20010714/amavis/av/mksvir	Sat Apr 20 20:23:11 2002
+@@ -0,0 +1,33 @@
 +#
 +# mks_vir (www.mks.com.pl)
 +#
@@ -42,9 +42,10 @@ diff -urN amavisd-orig/amavis/av/mksvir amavisd-snapshot-20010714/amavis/av/mksv
 +
 +if ($mksvir ne "") {
 +        $output = `$mksvir -s $TEMPDIR/parts/*`;
++	 $ertval = $?;
 +        do_log(2,$output);
 +        if ($errval != 0) {
-+                if ($errval & 1) {
++                if ($output =~ /file.*virus/) { # exit codes aren't as reliable as it seems :(
 +                        @virusname = ($output =~ /file.*virus (.+)/g);
 +                        do_virus($output);
 +                } else {
@@ -53,28 +54,23 @@ diff -urN amavisd-orig/amavis/av/mksvir amavisd-snapshot-20010714/amavis/av/mksv
 +        }
 +}
 +
-+# --------- kody bledow mks --------
++# --------- or'ed exit codes --------
 +# ===================================
-+#
-+# na kodach bledow moga byc wykonana operacja bitowa OR
-+# tak wiec kod bledu 0x05 oznacza : 1 + 4
 +#
 +# 0  OK
 +#
-+# 1  znaleziony wirus
-+# 2  plik wyleczony
-+# 4  plik skasowany
++# 1  virus FOUND
++# 2  file repaired
++# 4  file DELETED
 +#
-+# kody bledow:
-+#
-+# 128  0x80  blad wewnetrzny
-+# 256  0x100 blad opcji
-+# 512  0x200 blad inicjalizacji
-+# 1024 0x400 blad operacji plikowej
++# 128  0x80  internal error
++# 256  0x100 commandline options error
++# 512  0x200 initialization error
++# 1024 0x400 IO error
 +
 diff -urN amavisd-orig/configure.in amavisd-snapshot-20010714/configure.in
---- amavisd-orig/configure.in	Sat Apr 20 19:40:18 2002
-+++ amavisd-snapshot-20010714/configure.in	Sat Apr 20 19:49:43 2002
+--- amavisd-orig/configure.in	Sat Apr 20 20:22:04 2002
++++ amavisd-snapshot-20010714/configure.in	Sat Apr 20 20:22:51 2002
 @@ -344,6 +344,7 @@
    cyber_scanner_frag=$srcdir/amavis/av/cyber
    fsec_scanner_frag=$srcdir/amavis/av/fsec
