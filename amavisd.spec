@@ -62,7 +62,7 @@ autoconf
 	--enable-smtp \
 	--enable-all \
 	--enable-syslog \
-	--with-runtime-dir=/tmp \
+	--with-runtime-dir=%{_var}/spool/amavis/runtime \
 	--with-virusdir=/var/spool/amavis/virusmails \
 	--with-logdir=%{_var}/log \
 	--with-amavisuser=amavis \
