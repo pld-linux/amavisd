@@ -3,7 +3,7 @@ Summary:	A Mail Virus Scanner - Daemon.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	20010714
-Release:	7
+Release:	8
 License:	GPL
 Group:		Applications/Mail
 Source0:	http://www.amavis.org/dist/perl/%{name}-snapshot-%{version}.tar.gz
@@ -32,8 +32,6 @@ BuildRequires:	sh-utils
 BuildRequires:	unarj
 BuildRequires:	unrar
 BuildRequires:	zoo
-Obsoletes:	AMaViS
-Obsoletes:	amavis
 Requires:	%{_libdir}/sendmail
 Requires:	arc
 Requires:	bzip2
@@ -46,6 +44,8 @@ Requires:	unrar
 Requires:	zoo
 Requires:	amavisd-daemon
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Obsoletes:	AMaViS
+Obsoletes:	amavis
 
 %description
 AMaViS is a script that interfaces a mail transport agent (MTA) with
