@@ -285,4 +285,4 @@ ln -sf amavisd.qmail %{_sbindir}/amavisd
 ln -sf amavisd.sendmail %{_sbindir}/amavisd
 
 %clean
-#rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
