@@ -3,7 +3,7 @@ Summary:	A Mail Virus Scanner - Daemon.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	20010714
-Release:	10
+Release:	11
 License:	GPL
 Group:		Applications/Mail
 Source0:	http://www.amavis.org/dist/perl/%{name}-snapshot-%{version}.tar.gz
@@ -101,28 +101,29 @@ a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
 
 Pakiet ten zawiera back-end dla exima.
 
-%package qmail
-Summary:	A Mail Virus Scanner - qmail backend.
-Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla qmaila
-Group:		Applications/Mail
-Provides:	amavisd-daemon
-Obsoletes:	amavisd-daemon
-Obsoletes:	amavisd-postfix
-Obsoletes:	amavisd-exim
-Obsoletes:	amavisd-sendmail
-Requires:	qmailmta
-
-%description qmail
-AMaViS is a script that interfaces a mail transport agent (MTA) with
-one or more virus scanners. This is daemonized version of amavis.
-
-This package contains backend for qmail.
-
-%description qmail -l pl
-AMaViS to skrypt po¶rednicz±cy pomiêdzy agentem transferu poczty (MTA)
-a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
-
-Pakiet ten zawiera back-end dla qmaila.
+# NFY
+#%package qmail
+#Summary:	A Mail Virus Scanner - qmail backend.
+#Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla qmaila
+#Group:		Applications/Mail
+#Provides:	amavisd-daemon
+#Obsoletes:	amavisd-daemon
+#Obsoletes:	amavisd-postfix
+#Obsoletes:	amavisd-exim
+#Obsoletes:	amavisd-sendmail
+#Requires:	qmailmta
+#
+#%description qmail
+#AMaViS is a script that interfaces a mail transport agent (MTA) with
+#one or more virus scanners. This is daemonized version of amavis.
+#
+#This package contains backend for qmail.
+#
+#%description qmail -l pl
+#AMaViS to skrypt po¶rednicz±cy pomiêdzy agentem transferu poczty (MTA)
+#a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
+#
+#Pakiet ten zawiera back-end dla qmaila.
 
 %package sendmail
 Summary:	A Mail Virus Scanner - sendmail backend.
@@ -186,19 +187,20 @@ mv amavis/amavisd amavis/amavisd.postfix
 %{__make}
 mv amavis/amavisd amavis/amavisd.exim
 
-%configure \
-	--disable-smtp \
-	--enable-qmail \
-	--enable-all \
-	--enable-syslog \
-	--with-runtime-dir=%{_var}/spool/amavis/runtime \
-	--with-virusdir=%{_var}/spool/amavis/virusmails \
-	--with-logdir=%{_var}/log \
-	--with-amavisuser=amavis \
-	--with-sockname=%{_var}/run/amavisd/amavisd.sock
-
-%{__make}
-mv amavis/amavisd amavis/amavisd.qmail
+# NFY
+#%configure \
+#	--disable-smtp \
+#	--enable-qmail \
+#	--enable-all \
+#	--enable-syslog \
+#	--with-runtime-dir=%{_var}/spool/amavis/runtime \
+#	--with-virusdir=%{_var}/spool/amavis/virusmails \
+#	--with-logdir=%{_var}/log \
+#	--with-amavisuser=amavis \
+#	--with-sockname=%{_var}/run/amavisd/amavisd.sock
+#
+#%{__make}
+#mv amavis/amavisd amavis/amavisd.qmail
 
 %configure \
 	--disable-smtp \
@@ -223,7 +225,7 @@ install -d $RPM_BUILD_ROOT{%{_var}/spool/amavis,%{_var}/run/amavisd}
 	DESTDIR=$RPM_BUILD_ROOT
 install -D %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/%{name}
 
-install amavis/amavisd.{exim,postfix,qmail,sendmail} $RPM_BUILD_ROOT%{_sbindir}
+install amavis/amavisd.{exim,postfix,sendmail} $RPM_BUILD_ROOT%{_sbindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -245,9 +247,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/amavisd.postfix
 %ghost %attr(777,root,root) %{_sbindir}/amavisd
 
-%files qmail
-%attr(755,root,root) %{_sbindir}/amavisd.qmail
-%ghost %attr(777,root,root) %{_sbindir}/amavisd
+#%files qmail
+#%attr(755,root,root) %{_sbindir}/amavisd.qmail
+#%ghost %attr(777,root,root) %{_sbindir}/amavisd
 
 %files sendmail
 %attr(755,root,root) %{_sbindir}/amavisd.sendmail
@@ -291,8 +293,8 @@ ln -sf amavisd.exim %{_sbindir}/amavisd
 %post postfix
 ln -sf amavisd.postfix %{_sbindir}/amavisd
 
-%post qmail
-ln -sf amavisd.qmail %{_sbindir}/amavisd
+#%post qmail
+#ln -sf amavisd.qmail %{_sbindir}/amavisd
 
 %post sendmail
 ln -sf amavisd.sendmail %{_sbindir}/amavisd
