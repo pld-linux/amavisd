@@ -1,6 +1,6 @@
-diff -urN amavisd-orig/amavis/amavisd.conf.in amavisd-snapshot-20010714/amavis/amavisd.conf.in
---- amavisd-orig/amavis/amavisd.conf.in	Sat Apr 20 20:22:04 2002
-+++ amavisd-snapshot-20010714/amavis/amavisd.conf.in	Sat Apr 20 20:23:19 2002
+diff -urN amavis-snapshot-20010714-orig/amavis/amavisd.conf.in amavis-snapshot-20010714/amavis/amavisd.conf.in
+--- amavis-snapshot-20010714-orig/amavis/amavisd.conf.in	Fri Mar 16 20:11:11 2001
++++ amavis-snapshot-20010714/amavis/amavisd.conf.in	Wed Apr 24 13:35:03 2002
 @@ -25,6 +25,9 @@
  # NOTE: don't forget to re-run ./configure if you want to use
  # another virus scanner!
@@ -11,9 +11,9 @@ diff -urN amavisd-orig/amavis/amavisd.conf.in amavisd-snapshot-20010714/amavis/a
  # NAI AntiVirus (uvscan)
  $uvscan = "@uvscan@";
  $uvscan_args = "@uvscan_args@";
-diff -urN amavisd-orig/amavis/amavisd.in amavisd-snapshot-20010714/amavis/amavisd.in
---- amavisd-orig/amavis/amavisd.in	Sat Apr 20 20:22:04 2002
-+++ amavisd-snapshot-20010714/amavis/amavisd.in	Sat Apr 20 20:22:51 2002
+diff -urN amavis-snapshot-20010714-orig/amavis/amavisd.in amavis-snapshot-20010714/amavis/amavisd.in
+--- amavis-snapshot-20010714-orig/amavis/amavisd.in	Wed Jul 11 23:14:41 2001
++++ amavis-snapshot-20010714/amavis/amavisd.in	Wed Apr 24 13:35:03 2002
 @@ -82,7 +82,7 @@
  # Virus related
  
@@ -31,9 +31,9 @@ diff -urN amavisd-orig/amavis/amavisd.in amavisd-snapshot-20010714/amavis/amavis
  @hbedv_scanner_frag@
  @nai_scanner_frag@
  @sophos_scanner_frag@
-diff -urN amavisd-orig/amavis/av/mksvir amavisd-snapshot-20010714/amavis/av/mksvir
---- amavisd-orig/amavis/av/mksvir	Thu Jan  1 01:00:00 1970
-+++ amavisd-snapshot-20010714/amavis/av/mksvir	Sat Apr 20 20:23:11 2002
+diff -urN amavis-snapshot-20010714-orig/amavis/av/mksvir amavis-snapshot-20010714/amavis/av/mksvir
+--- amavis-snapshot-20010714-orig/amavis/av/mksvir	Thu Jan  1 01:00:00 1970
++++ amavis-snapshot-20010714/amavis/av/mksvir	Wed Apr 24 13:35:03 2002
 @@ -0,0 +1,33 @@
 +#
 +# mks_vir (www.mks.com.pl)
@@ -41,7 +41,7 @@ diff -urN amavisd-orig/amavis/av/mksvir amavisd-snapshot-20010714/amavis/av/mksv
 +
 +
 +if ($mksvir ne "") {
-+        $output = `$mksvir -s $TEMPDIR/parts/* 2>&1`;
++        $output = `$mksvir -f /etc/mks.cfg -s $TEMPDIR/parts/* 2>&1`;
 +        $errval = ($? >> 8);
 +        do_log(2,$output);
 +        if ($errval != 0) {
@@ -68,10 +68,10 @@ diff -urN amavisd-orig/amavis/av/mksvir amavisd-snapshot-20010714/amavis/av/mksv
 +# 512  0x200 initialization error
 +# 1024 0x400 IO error
 +
-diff -urN amavisd-orig/configure.in amavisd-snapshot-20010714/configure.in
---- amavisd-orig/configure.in	Sat Apr 20 20:22:04 2002
-+++ amavisd-snapshot-20010714/configure.in	Sat Apr 20 20:22:51 2002
-@@ -344,6 +344,7 @@
+diff -urN amavis-snapshot-20010714-orig/configure.in amavis-snapshot-20010714/configure.in
+--- amavis-snapshot-20010714-orig/configure.in	Sat Jul 14 18:23:35 2001
++++ amavis-snapshot-20010714/configure.in	Wed Apr 24 14:01:52 2002
+@@ -365,6 +365,7 @@
    cyber_scanner_frag=$srcdir/amavis/av/cyber
    fsec_scanner_frag=$srcdir/amavis/av/fsec
    hbedv_scanner_frag=$srcdir/amavis/av/hbedv
@@ -79,7 +79,7 @@ diff -urN amavisd-orig/configure.in amavisd-snapshot-20010714/configure.in
    nai_scanner_frag=$srcdir/amavis/av/nai
    nod32_scanner_frag=$srcdir/amavis/av/nod32
    rav_scanner_frag=$srcdir/amavis/av/rav
-@@ -367,6 +368,20 @@
+@@ -388,6 +389,20 @@
    hbedv_scanner_frag=$srcdir/amavis/av/hbedv
  fi
  
@@ -100,7 +100,16 @@ diff -urN amavisd-orig/configure.in amavisd-snapshot-20010714/configure.in
  nai_scanner_frag=/dev/null
  AC_CHECKING([*** McAfee Virusscan ***])
  AC_PATH_PROGS(uvscan, uvscan, , $PATH:/usr/bin:/usr/local/bin)
-@@ -747,6 +762,7 @@
+@@ -615,7 +630,7 @@
+ fi
+ 
+ AC_MSG_CHECKING([if any virus scanners are installed at all])
+-if test "x$antivir$uvscan$ufindvir$fvsco$sophos$avp$avpdc$fsav$vscan$vfind$inocucmd$rav$nod32$csav" = "x" ; then
++if test "x$mks_vir$antivir$uvscan$ufindvir$fvsco$sophos$avp$avpdc$fsav$vscan$vfind$inocucmd$rav$nod32$csav" = "x" ; then
+   AC_MSG_RESULT([no])
+   AC_MSG_ERROR([
+ 
+@@ -768,6 +783,7 @@
  AC_SUBST_FILE(cyber_scanner_frag)
  AC_SUBST_FILE(fsec_scanner_frag)
  AC_SUBST_FILE(hbedv_scanner_frag)
