@@ -22,6 +22,7 @@ BuildRequires:	perl-MIME-tools
 BuildRequires:	perl-Unix-Syslog
 BuildRequires:	perl-Convert-UUlib
 BuildRequires:	perl-Convert-TNEF
+BuildRequires:	perl-libnet
 BuildRequires:	sh-utils
 BuildRequires:	unarj
 BuildRequires:	unrar
