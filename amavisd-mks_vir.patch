@@ -1,0 +1,114 @@
+diff -urN amavisd-orig/amavis/amavisd.conf.in amavisd-snapshot-20010714/amavis/amavisd.conf.in
+--- amavisd-orig/amavis/amavisd.conf.in	Sat Apr 20 19:40:18 2002
++++ amavisd-snapshot-20010714/amavis/amavisd.conf.in	Sat Apr 20 19:49:48 2002
+@@ -25,6 +25,9 @@
+ # NOTE: don't forget to re-run ./configure if you want to use
+ # another virus scanner!
+ 
++# mks_vir Antivirus (mks32)
++$mksvir = "@mksvir";
++
+ # NAI AntiVirus (uvscan)
+ $uvscan = "@uvscan@";
+ $uvscan_args = "@uvscan_args@";
+diff -urN amavisd-orig/amavis/amavisd.in amavisd-snapshot-20010714/amavis/amavisd.in
+--- amavisd-orig/amavis/amavisd.in	Sat Apr 20 19:40:18 2002
++++ amavisd-snapshot-20010714/amavis/amavisd.in	Sat Apr 20 19:50:13 2002
+@@ -82,7 +82,7 @@
+ # Virus related
+ 
+ # Av scanners
+-use vars qw ( $uvscan $uvscan_args $uvscan_exitcode $antivir $sophos $sophos_ide $avp $AVPDIR $avpdc $fsav $vscan $vfind $inocucmd $rav $nod32 $csav );
++use vars qw ( $uvscan $uvscan_args $uvscan_exitcode $antivir $sophos $sophos_ide $avp $AVPDIR $avpdc $fsav $vscan $vfind $inocucmd $rav $nod32 $csav $mksvir );
+ 
+ use vars qw ( $virusbackup $QUARANTINE $VIRUSFILE $viruslist @virusname $warnadmin $warnsender $warnrecip );
+ 
+@@ -350,6 +350,7 @@
+ 	# more once we've found one.
+ 	#
+ 
++@mksvir_scanner_frag@
+ @hbedv_scanner_frag@
+ @nai_scanner_frag@
+ @sophos_scanner_frag@
+diff -urN amavisd-orig/amavis/av/mksvir amavisd-snapshot-20010714/amavis/av/mksvir
+--- amavisd-orig/amavis/av/mksvir	Thu Jan  1 01:00:00 1970
++++ amavisd-snapshot-20010714/amavis/av/mksvir	Sat Apr 20 19:49:56 2002
+@@ -0,0 +1,37 @@
++#
++# mks_vir (www.mks.com.pl)
++#
++
++
++if ($mksvir ne "") {
++        $output = `$mksvir -s $TEMPDIR/parts/*`;
++        do_log(2,$output);
++        if ($errval != 0) {
++                if ($errval & 1) {
++                        @virusname = ($output =~ /file.*virus (.+)/g);
++                        do_virus($output);
++                } else {
++                        do_log(0,"Virus scanner failure: $antivir (error code: $errval)");
++                }
++        }
++}
++
++# --------- kody bledow mks --------
++# ===================================
++#
++# na kodach bledow moga byc wykonana operacja bitowa OR
++# tak wiec kod bledu 0x05 oznacza : 1 + 4
++#
++# 0  OK
++#
++# 1  znaleziony wirus
++# 2  plik wyleczony
++# 4  plik skasowany
++#
++# kody bledow:
++#
++# 128  0x80  blad wewnetrzny
++# 256  0x100 blad opcji
++# 512  0x200 blad inicjalizacji
++# 1024 0x400 blad operacji plikowej
++
+diff -urN amavisd-orig/configure.in amavisd-snapshot-20010714/configure.in
+--- amavisd-orig/configure.in	Sat Apr 20 19:40:18 2002
++++ amavisd-snapshot-20010714/configure.in	Sat Apr 20 19:49:43 2002
+@@ -344,6 +344,7 @@
+   cyber_scanner_frag=$srcdir/amavis/av/cyber
+   fsec_scanner_frag=$srcdir/amavis/av/fsec
+   hbedv_scanner_frag=$srcdir/amavis/av/hbedv
++  mksvir_scanner_frag=$srcdir/amavis/av/mksvir
+   nai_scanner_frag=$srcdir/amavis/av/nai
+   nod32_scanner_frag=$srcdir/amavis/av/nod32
+   rav_scanner_frag=$srcdir/amavis/av/rav
+@@ -367,6 +368,20 @@
+   hbedv_scanner_frag=$srcdir/amavis/av/hbedv
+ fi
+ 
++mksvir_scanner_frag=/dev/null
++AC_CHECKING([*** mks_vir AntiVirus ***])
++AC_PATH_PROGS(mksvir, mks32, , $PATH:/usr/bin:/usr/local/bin)
++if test "x$mksvir" = "x" ; then
++  AC_MSG_WARN([************************************************************])
++  AC_MSG_WARN([***              mks_vir AntiVirus NOT found             ***])
++  AC_MSG_WARN([***                    but that's ok                     ***])
++  AC_MSG_WARN([************************************************************])
++else
++  # This is the first one
++  avscanner=" mks_vir AntiVirus"
++  mksvir_scanner_frag=$srcdir/amavis/av/mksvir
++fi
++
+ nai_scanner_frag=/dev/null
+ AC_CHECKING([*** McAfee Virusscan ***])
+ AC_PATH_PROGS(uvscan, uvscan, , $PATH:/usr/bin:/usr/local/bin)
+@@ -747,6 +762,7 @@
+ AC_SUBST_FILE(cyber_scanner_frag)
+ AC_SUBST_FILE(fsec_scanner_frag)
+ AC_SUBST_FILE(hbedv_scanner_frag)
++AC_SUBST_FILE(mksvir_scanner_frag)
+ AC_SUBST_FILE(nai_scanner_frag)
+ AC_SUBST_FILE(nod32_scanner_frag)
+ AC_SUBST_FILE(rav_scanner_frag)
