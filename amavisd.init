@@ -24,7 +24,7 @@ case "$1" in
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/amavisd ]; then
 		msg_starting Amavisd
-		daemon su -s amavis -c "/usr/sbin/amavisd"
+		daemon 'su -s /bin/bash amavis -c "/usr/sbin/amavisd"'
 		chmod a+w /var/run/amavisd/amavisd.sock
 		touch /var/lock/subsys/amavisd
 	else
