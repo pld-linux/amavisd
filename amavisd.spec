@@ -1,4 +1,4 @@
-%include	/usr/lib/rpm/macros.perl    
+%include	/usr/lib/rpm/macros.perl
 Summary:	A Mail Virus Scanner - Daemon.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
@@ -81,7 +81,7 @@ install -D %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/%{name}
 %attr(755,root,root) %{_sbindir}/amavisd
 %attr(755,root,root) %{_sbindir}/amavis
 %attr(754,root,root) %{_sysconfdir}/rc.d/init.d/*
-%config(noreplace) %{_sysconfdir}/amavisd.conf 
+%config(noreplace) %{_sysconfdir}/amavisd.conf
 %doc *.gz doc/*.gz doc/amavis.png
 %attr(750,amavis,root) %{_var}/spool/amavis
 %attr(755,amavis,root) %{_var}/run/amavisd
