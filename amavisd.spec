@@ -53,6 +53,7 @@ Requires:	unarj
 Requires:	unrar
 Requires:	zoo
 Requires:	amavisd-daemon
+Provides:	user(amavis)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	AMaViS
 Obsoletes:	amavis
@@ -265,7 +266,7 @@ fi
 
 %postun
 if [ "$1" = "0" ]; then
-	/usr/sbin/userdel amavis
+	%userremove amavis
 fi
 
 %post
