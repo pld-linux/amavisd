@@ -211,7 +211,7 @@ mv amavis/amavisd amavis/amavisd.exim
 #	--with-amavisuser=amavis \
 #	--with-sockname=%{_var}/run/amavisd/amavisd.sock
 #
-#%{__make}
+#%%{__make}
 #mv amavis/amavisd amavis/amavisd.qmail
 
 %configure \
