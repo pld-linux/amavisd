@@ -55,7 +55,7 @@ Summary:	A Mail Virus Scanner - postfix back-end.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - back-end dla postfiksa
 Group:		Applications/Mail
 Provides:	amavisd-daemon
-Obsoletes:	amavisd-exim
+Obsoletes:	amavisd-daemon
 Requires:	postfix
 
 %description postfix
@@ -75,7 +75,7 @@ Summary:	A Mail Virus Scanner - exim backend.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla exima
 Group:		Applications/Mail
 Provides:	amavisd-daemon
-Obsoletes:	amavisd-postfix
+Obsoletes:	amavisd-daemon
 Requires:	exim
 
 %description exim
@@ -89,6 +89,46 @@ AMaViS to skrypt po¶rednicz±cy pomiêdzy agentem transferu poczty (MTA)
 a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
 
 Pakiet ten zawiera back-end dla exima.
+
+%package qmail
+Summary:	A Mail Virus Scanner - qmail backend.
+Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla qmaila
+Group:		Applications/Mail
+Provides:	amavisd-daemon
+Obsoletes:	amavisd-daemon
+Requires:	qmailmta
+
+%description qmail
+AMaViS is a script that interfaces a mail transport agent (MTA) with
+one or more virus scanners. This is daemonized version of amavis.
+
+This package contains backend for qmail.
+
+%description qmail -l pl
+AMaViS to skrypt po¶rednicz±cy pomiêdzy agentem transferu poczty (MTA)
+a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
+
+Pakiet ten zawiera back-end dla qmaila.
+
+%package sendmail
+Summary:	A Mail Virus Scanner - sendmail backend.
+Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla sendmaila
+Group:		Applications/Mail
+Provides:	amavisd-daemon
+Obsoletes:	amavisd-daemon
+Requires:	sendmail
+
+%description sendmail
+AMaViS is a script that interfaces a mail transport agent (MTA) with
+one or more virus scanners. This is daemonized version of amavis.
+
+This package contains backend for sendmail.
+
+%description sendmail -l pl
+AMaViS to skrypt po¶rednicz±cy pomiêdzy agentem transferu poczty (MTA)
+a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
+
+Pakiet ten zawiera back-end dla sendmaila.
 
 %prep
 %setup -q -n %{name}-snapshot-%{version}
@@ -121,7 +161,35 @@ mv amavis/amavisd amavis/amavisd.postfix
 	--with-sockname=%{_var}/run/amavisd/amavisd.sock
 
 %{__make}
-cp amavis/amavisd amavis/amavisd.exim
+mv amavis/amavisd amavis/amavisd.exim
+
+%configure \
+	--disable-smtp \
+	--enable-qmail \
+	--enable-all \
+	--enable-syslog \
+	--with-runtime-dir=%{_var}/spool/amavis/runtime \
+	--with-virusdir=%{_var}/spool/amavis/virusmails \
+	--with-logdir=%{_var}/log \
+	--with-amavisuser=amavis \
+	--with-sockname=%{_var}/run/amavisd/amavisd.sock
+
+%{__make}
+mv amavis/amavisd amavis/amavisd.qmail
+
+%configure \
+	--disable-smtp \
+	--enable-sendmail \
+	--enable-all \
+	--enable-syslog \
+	--with-runtime-dir=%{_var}/spool/amavis/runtime \
+	--with-virusdir=%{_var}/spool/amavis/virusmails \
+	--with-logdir=%{_var}/log \
+	--with-amavisuser=amavis \
+	--with-sockname=%{_var}/run/amavisd/amavisd.sock
+
+%{__make}
+mv amavis/amavisd amavis/amavisd.sendmail
 
 gzip -9nf README* NEWS AUTHORS BUGS ChangeLog FAQ HINTS TODO doc/amavis.html
 
@@ -134,7 +202,7 @@ install -d $RPM_BUILD_ROOT{%{_var}/spool/amavis,%{_var}/run/amavisd}
 	DESTDIR=$RPM_BUILD_ROOT
 install -D %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/%{name}
 
-install amavis/amavisd.{exim,postfix} $RPM_BUILD_ROOT%{_sbindir}
+install amavis/amavisd.{exim,postfix,qmail,sendmail} $RPM_BUILD_ROOT%{_sbindir}
 
 %files
 %defattr(644,root,root,755)
@@ -145,13 +213,17 @@ install amavis/amavisd.{exim,postfix} $RPM_BUILD_ROOT%{_sbindir}
 %attr(750,amavis,root) %{_var}/spool/amavis
 %attr(755,amavis,root) %{_var}/run/amavisd
 
+%files exim
+%attr(755,root,root) %{_sbindir}/amavisd.exim
+
 %files postfix
-%defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/amavisd.postfix
 
-%files exim
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_sbindir}/amavisd.exim
+%files qmail
+%attr(755,root,root) %{_sbindir}/amavisd.qmail
+
+%files sendmail
+%attr(755,root,root) %{_sbindir}/amavisd.sendmail
 
 %pre
 if [ -n "`id -u amavis 2>/dev/null`" ]; then
@@ -186,10 +258,7 @@ if [ "$1" = "0" ];then
 fi
 
 %post exim
-if [ -f %{_sbindir}/amavisd ]; then
-    rm -f %{_sbindir}/amavisd
-fi
-ln -s amavisd.exim %{_sbindir}/amavisd
+ln -sf amavisd.exim %{_sbindir}/amavisd
 
 %postun exim
 if [ -f %{_sbindir}/amavisd ]; then
@@ -197,12 +266,25 @@ if [ -f %{_sbindir}/amavisd ]; then
 fi
 
 %post postfix
+ln -sf amavisd.postfix %{_sbindir}/amavisd
+
+%postun postfix
 if [ -f %{_sbindir}/amavisd ]; then
     rm -f %{_sbindir}/amavisd
 fi
-ln -s amavisd.postfix %{_sbindir}/amavisd
 
-%postun postfix
+%post qmail
+ln -sf amavisd.qmail %{_sbindir}/amavisd
+
+%postun qmail
+if [ -f %{_sbindir}/amavisd ]; then
+    rm -f %{_sbindir}/amavisd
+fi
+
+%post sendmail
+ln -sf amavisd.sendmail %{_sbindir}/amavisd
+
+%postun sendmail
 if [ -f %{_sbindir}/amavisd ]; then
     rm -f %{_sbindir}/amavisd
 fi
