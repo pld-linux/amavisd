@@ -8,6 +8,7 @@ Epoch:		1
 License:	GPL
 Group:		Applications/Mail
 Source0:	http://www.amavis.org/dist/perl/%{name}-%{version}.tar.gz
+# Source0-md5:	432a32bfc6d473564f49028b540f53ad
 Source1:	%{name}.init
 Patch0:		%{name}-notest-mta.patch
 Patch1:		%{name}-nomilter.patch
