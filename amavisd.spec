@@ -220,7 +220,7 @@ mv amavis/amavisd amavis/amavisd.sendmail
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_var}/spool/amavis,%{_var}/run/amavisd}
+install -d $RPM_BUILD_ROOT{%{_var}/spool/amavis/{runtime,virusmails},%{_var}/run/amavisd}
 
 %{__make} install \
 	amavisuser=$(id -u) \
