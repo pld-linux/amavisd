@@ -4,14 +4,16 @@ Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	20010714
 Release:	1
-URL:		http://www.amavis.org/
-Source0:	http://www.amavis.org/dist/perl/%{name}-snapshot-%{version}.tar.gz
-Source1:	%{name}.init
 License:	GPL
 Group:		Applications/Mail
 Group(de):	Applikationen/Post
+Group(es):	Aplicaciones/Correo Electrónico
+Group(fr):	Applications/Courrier
 Group(pl):	Aplikacje/Poczta
 Group(pt):	Aplicações/Correio Eletrônico
+Source0:	http://www.amavis.org/dist/perl/%{name}-snapshot-%{version}.tar.gz
+Source1:	%{name}.init
+URL:		http://www.amavis.org/
 BuildRequires:	arc
 BuildRequires:	autoconf
 BuildRequires:	bzip2
@@ -32,7 +34,7 @@ BuildRequires:	unrar
 BuildRequires:	zoo
 Obsoletes:	AMaViS
 Obsoletes:	amavis
-Requires:	%{_sbindir}/sendmail
+Requires:	%{_libdir}/sendmail
 Requires:	arc
 Requires:	bzip2
 Requires:	file
@@ -109,15 +111,15 @@ fi
 /sbin/chkconfig --add amavisd
 
 if [ -f %{_var}/lock/subsys/amavisd ]; then
-        %{_sysconfdir}/rc.d/init.d/amavisd restart >&2
+        /etc/rc.d/init.d/amavisd restart >&2
 else
-        echo "Run \"%{_sysconfdir}/rc.d/init.d/amavisd start\" to start Amavisd daemon."
+        echo "Run \"/etc/rc.d/init.d/amavisd start\" to start Amavisd daemon."
 fi
 
 %preun
 if [ "$1" = "0" ];then
         if [ -f %{_var}/lock/subsys/amavisd ]; then
-                %{_sysconfdir}/rc.d/init.d/amavisd stop >&2
+                /etc/rc.d/init.d/amavisd stop >&2
         fi
         /sbin/chkconfig --del amavisd
 fi
