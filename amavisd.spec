@@ -3,7 +3,7 @@ Summary:	A Mail Virus Scanner - Daemon.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	20010714
-Release:	9
+Release:	10
 License:	GPL
 Group:		Applications/Mail
 Source0:	http://www.amavis.org/dist/perl/%{name}-snapshot-%{version}.tar.gz
@@ -61,6 +61,9 @@ Summary(pl):	Antywirusowy skaner poczty elektronicznej - back-end dla postfiksa
 Group:		Applications/Mail
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
+Obsoletes:	amavisd-exim
+Obsoletes:	amavisd-qmail
+Obsoletes:	amavisd-sendmail
 Requires:	postfix
 
 %description postfix
@@ -81,6 +84,9 @@ Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla exima
 Group:		Applications/Mail
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
+Obsoletes:	amavisd-postfix
+Obsoletes:	amavisd-qmail
+Obsoletes:	amavisd-sendmail
 Requires:	exim
 
 %description exim
@@ -101,6 +107,9 @@ Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla qmaila
 Group:		Applications/Mail
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
+Obsoletes:	amavisd-postfix
+Obsoletes:	amavisd-exim
+Obsoletes:	amavisd-sendmail
 Requires:	qmailmta
 
 %description qmail
@@ -121,6 +130,9 @@ Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla sendmaila
 Group:		Applications/Mail
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
+Obsoletes:	amavisd-postfix
+Obsoletes:	amavisd-exim
+Obsoletes:	amavisd-qmail
 Requires:	sendmail
 
 %description sendmail
@@ -202,8 +214,6 @@ mv amavis/amavisd amavis/amavisd.qmail
 %{__make}
 mv amavis/amavisd amavis/amavisd.sendmail
 
-gzip -9nf README* NEWS AUTHORS BUGS ChangeLog FAQ HINTS TODO doc/amavis.html
-
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_var}/spool/amavis,%{_var}/run/amavisd}
@@ -215,12 +225,15 @@ install -D %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/%{name}
 
 install amavis/amavisd.{exim,postfix,qmail,sendmail} $RPM_BUILD_ROOT%{_sbindir}
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %files
 %defattr(644,root,root,755)
+%doc README* NEWS AUTHORS BUGS ChangeLog FAQ HINTS TODO doc/amavis.html doc/amavis.png
 %attr(755,root,root) %{_sbindir}/amavis
 %attr(754,root,root) %{_sysconfdir}/rc.d/init.d/*
 %config(noreplace) %{_sysconfdir}/amavisd.conf
-%doc *.gz doc/*.gz doc/amavis.png
 %attr(750,amavis,root) %{_var}/spool/amavis
 %attr(755,amavis,root) %{_var}/run/amavisd
 
@@ -283,6 +296,3 @@ ln -sf amavisd.qmail %{_sbindir}/amavisd
 
 %post sendmail
 ln -sf amavisd.sendmail %{_sbindir}/amavisd
-
-%clean
-rm -rf $RPM_BUILD_ROOT
