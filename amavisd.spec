@@ -99,7 +99,7 @@ if [ -n "`id -u amavis 2>/dev/null`" ]; then
                 exit 1
         fi
 else
-        %{_sbindir}/useradd -u 97 -r -d %{_var}/spool/amavis  -s /bin/false -c "Anti Virus Checker" -g nobody  amavis 1>&2
+        %{_sbindir}/useradd -u 97 -r -d %{_var}/spool/amavis  -s /bin/bash -c "Anti Virus Checker" -g nobody  amavis 1>&2
 fi
 
 %postun
