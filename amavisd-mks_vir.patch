@@ -41,8 +41,8 @@ diff -urN amavisd-orig/amavis/av/mksvir amavisd-snapshot-20010714/amavis/av/mksv
 +
 +
 +if ($mksvir ne "") {
-+        $output = `$mksvir -s $TEMPDIR/parts/*`;
-+	 $errval = $?;
++        $output = `$mksvir -s $TEMPDIR/parts/* 2>&1`;
++        $errval = ($? >> 8);
 +        do_log(2,$output);
 +        if ($errval != 0) {
 +                if ($output =~ /file.*virus/) { # exit codes aren't as reliable as it seems :(
