@@ -215,15 +215,19 @@ install amavis/amavisd.{exim,postfix,qmail,sendmail} $RPM_BUILD_ROOT%{_sbindir}
 
 %files exim
 %attr(755,root,root) %{_sbindir}/amavisd.exim
+%ghost %{_sbindir}/amavisd
 
 %files postfix
 %attr(755,root,root) %{_sbindir}/amavisd.postfix
+%ghost %{_sbindir}/amavisd
 
 %files qmail
 %attr(755,root,root) %{_sbindir}/amavisd.qmail
+%ghost %{_sbindir}/amavisd
 
 %files sendmail
 %attr(755,root,root) %{_sbindir}/amavisd.sendmail
+%ghost %{_sbindir}/amavisd
 
 %pre
 if [ -n "`id -u amavis 2>/dev/null`" ]; then
@@ -260,34 +264,18 @@ fi
 %post exim
 ln -sf amavisd.exim %{_sbindir}/amavisd
 
-%postun exim
-if [ -f %{_sbindir}/amavisd ]; then
-    rm -f %{_sbindir}/amavisd
-fi
 
 %post postfix
 ln -sf amavisd.postfix %{_sbindir}/amavisd
 
-%postun postfix
-if [ -f %{_sbindir}/amavisd ]; then
-    rm -f %{_sbindir}/amavisd
-fi
 
 %post qmail
 ln -sf amavisd.qmail %{_sbindir}/amavisd
 
-%postun qmail
-if [ -f %{_sbindir}/amavisd ]; then
-    rm -f %{_sbindir}/amavisd
-fi
 
 %post sendmail
 ln -sf amavisd.sendmail %{_sbindir}/amavisd
 
-%postun sendmail
-if [ -f %{_sbindir}/amavisd ]; then
-    rm -f %{_sbindir}/amavisd
-fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
