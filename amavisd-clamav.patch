@@ -6,7 +6,7 @@ diff -urN amavisd-snapshot-20020300.org/amavis/amavisd.conf.in amavisd-snapshot-
  $AVPDIR = dirname($avp);
  
 +# Clam AntiVirus http://www.konarski.edu.pl/~zolw/clam.html
-+$clamav = "@clamav@";
++$clamav = "@clamscan@";
 +
  # KasperskyLab AVPDaemon / AvpDaemonClient
  #
