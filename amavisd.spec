@@ -156,8 +156,8 @@ Pakiet ten zawiera back-end dla sendmaila.
 
 %build
 aclocal
-autoconf
-automake -a -c -f
+%{__autoconf}
+%{__automake}
 %configure \
 	--enable-smtp \
 	--enable-postfix \
