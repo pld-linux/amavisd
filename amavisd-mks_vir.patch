@@ -41,11 +41,11 @@ diff -urN amavis-snapshot-20010714-orig/amavis/av/mksvir amavis-snapshot-2001071
 +
 +
 +if ($mksvir ne "") {
-+        $output = `$mksvir -f /etc/mks.cfg -s $TEMPDIR/parts/* 2>&1`;
++        $output = `$mksvir -s $TEMPDIR/parts/* 2>&1`;
 +        $errval = ($? >> 8);
 +        do_log(2,$output);
 +        if ($errval != 0) {
-+                if ($output =~ /file.*virus/) { # exit codes aren't as reliable as it seems :(
++                if ($errval == 1) {
 +                        @virusname = ($output =~ /file.*virus (.+)/g);
 +                        do_virus($output);
 +                } else {
