@@ -34,6 +34,7 @@ BuildRequires:	perl-Unix-Syslog
 BuildRequires:	perl-Convert-UUlib
 BuildRequires:	perl-Convert-TNEF
 BuildRequires:	perl-libnet
+BuildRequires:	rpmbuild(macros) >= 1.159
 BuildRequires:	sh-utils
 BuildRequires:	unarj
 BuildRequires:	unrar
