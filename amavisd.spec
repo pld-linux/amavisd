@@ -162,7 +162,8 @@ Pakiet ten zawiera back-end dla sendmaila.
 %patch4 -p1
 
 %build
-aclocal
+rm -f missing
+%{__aclocal}
 %{__autoconf}
 %{__automake}
 %configure \
