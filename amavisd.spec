@@ -2,8 +2,8 @@
 Summary:	A Mail Virus Scanner - Daemon.
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
-Version:	20010714
-Release:	11
+Version:	20020300
+Release:	1
 License:	GPL
 Group:		Applications/Mail
 Source0:	http://www.amavis.org/dist/perl/%{name}-snapshot-%{version}.tar.gz
@@ -12,6 +12,7 @@ Patch0:		%{name}-notest-mta.patch
 Patch1:		%{name}-nomilter.patch
 Patch2:		%{name}-qmail.patch
 Patch3:		%{name}-mks_vir.patch
+Patch4:		%{name}-clamav.patch
 URL:		http://www.amavis.org/
 BuildRequires:	arc
 BuildRequires:	autoconf
@@ -154,6 +155,7 @@ Pakiet ten zawiera back-end dla sendmaila.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 aclocal
@@ -188,7 +190,7 @@ mv amavis/amavisd amavis/amavisd.postfix
 mv amavis/amavisd amavis/amavisd.exim
 
 # NFY
-#%configure \
+#%%configure \
 #	--disable-smtp \
 #	--enable-qmail \
 #	--enable-all \
