@@ -25,7 +25,6 @@ BuildRequires:	perl-Archive-Zip
 BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-MIME-tools
 BuildRequires:	perl-Unix-Syslog
-BuildRequires:	perl-devel
 BuildRequires:	perl-Convert-UUlib
 BuildRequires:	perl-Convert-TNEF
 BuildRequires:	sh-utils
@@ -60,11 +59,11 @@ a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
 %build
 autoconf
 %configure \
-	--enable-relay \
 	--enable-smtp \
 	--enable-all \
 	--enable-syslog \
-	--with-runtime-dir=%{_var}/spool/amavis/runtime \
+	--with-runtime-dir=/tmp \
+	--with-virusdir=/var/spool/amavis/virusmails \
 	--with-logdir=%{_var}/log \
 	--with-amavisuser=amavis \
 	--with-sockname=%{_var}/run/amavisd/amavisd.sock
