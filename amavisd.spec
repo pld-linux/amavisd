@@ -37,7 +37,7 @@ BuildRequires:	perl-Unix-Syslog
 BuildRequires:	perl-Convert-UUlib
 BuildRequires:	perl-Convert-TNEF
 BuildRequires:	perl-libnet
-BuildRequires:	rpmbuild(macros) >= 1.159
+BuildRequires:	rpmbuild(macros) >= 1.202
 BuildRequires:	sh-utils
 BuildRequires:	unarj
 BuildRequires:	unrar
@@ -259,14 +259,7 @@ install amavis/{amavisd.{exim,postfix,sendmail,qmail},amavis.qmail-queue} $RPM_B
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-if [ -n "`id -u amavis 2>/dev/null`" ]; then
-	if [ "`id -u amavis`" != "97" ]; then
-		echo "Error: user amavis doesn't have uid=97. Correct this before installing amavis." 1>&2
-		exit 1
-	fi
-else
-	/usr/sbin/useradd -u 97 -r -d %{_var}/spool/amavis -s /bin/false -c "Anti Virus Checker" -g nobody amavis 1>&2
-fi
+%useradd -u 97 -r -d %{_var}/spool/amavis -s /bin/false -c "Anti Virus Checker" -g nobody amavis
 
 %postun
 if [ "$1" = "0" ]; then
