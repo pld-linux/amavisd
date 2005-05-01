@@ -1,0 +1,2 @@
+- Requires: %{_libdir}/sendmail instead %{_sbindir}/sendmail,
+- cosmetics.
