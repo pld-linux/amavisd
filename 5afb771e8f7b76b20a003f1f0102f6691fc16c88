@@ -1,0 +1,2 @@
+- fix error build package
+  add %define no_install_post_chrpath 1
