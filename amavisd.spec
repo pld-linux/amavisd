@@ -42,8 +42,8 @@ BuildRequires:	sh-utils
 BuildRequires:	unarj
 BuildRequires:	unrar
 BuildRequires:	zoo
-Requires(pre): /bin/id
-Requires(pre): /usr/sbin/useradd
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/useradd
 Requires(postun):	/usr/sbin/userdel
 Requires(post,preun):	/sbin/chkconfig
 Requires:	/usr/lib/sendmail
