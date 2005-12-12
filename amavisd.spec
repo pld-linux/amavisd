@@ -32,21 +32,22 @@ BuildRequires:	ncompress
 BuildRequires:	perl-Archive-Tar
 BuildRequires:	perl-Archive-Zip
 BuildRequires:	perl-Compress-Zlib
+BuildRequires:	perl-Convert-TNEF
+BuildRequires:	perl-Convert-UUlib
 BuildRequires:	perl-MIME-tools
 BuildRequires:	perl-Unix-Syslog
-BuildRequires:	perl-Convert-UUlib
-BuildRequires:	perl-Convert-TNEF
 BuildRequires:	perl-libnet
 BuildRequires:	rpmbuild(macros) >= 1.202
 BuildRequires:	sh-utils
 BuildRequires:	unarj
 BuildRequires:	unrar
 BuildRequires:	zoo
+Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
 Requires(pre):	/usr/sbin/useradd
-Requires(postun):	/usr/sbin/userdel
-Requires(post,preun):	/sbin/chkconfig
 Requires:	/usr/lib/sendmail
+Requires:	amavisd-daemon
 Requires:	arc
 Requires:	bzip2
 Requires:	file
@@ -56,7 +57,6 @@ Requires:	sh-utils
 Requires:	unarj
 Requires:	unrar
 Requires:	zoo
-Requires:	amavisd-daemon
 Provides:	user(amavis)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	AMaViS
@@ -121,7 +121,7 @@ Pakiet ten zawiera back-end dla exima.
 
 # NFY
 %package qmail
-Summary:	A Mail Virus Scanner - qmail backend.
+Summary:	A Mail Virus Scanner - qmail backend
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla qmaila
 Group:		Applications/Mail
 Requires:	amavisd
