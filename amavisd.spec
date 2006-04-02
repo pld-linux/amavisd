@@ -25,7 +25,6 @@ URL:		http://www.amavis.org/
 BuildRequires:	arc
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	bzip2
 BuildRequires:	file
 BuildRequires:	lha
 BuildRequires:	ncompress
@@ -37,8 +36,7 @@ BuildRequires:	perl-Convert-UUlib
 BuildRequires:	perl-MIME-tools
 BuildRequires:	perl-Unix-Syslog
 BuildRequires:	perl-libnet
-BuildRequires:	rpmbuild(macros) >= 1.202
-BuildRequires:	sh-utils
+BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	unarj
 BuildRequires:	unrar
 BuildRequires:	zoo
@@ -58,10 +56,10 @@ Requires:	unarj
 Requires:	unrar
 Requires:	zoo
 Provides:	user(amavis)
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	AMaViS
 Obsoletes:	amavis
 Obsoletes:	amavisd-new
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 AMaViS is a script that interfaces a mail transport agent (MTA) with
@@ -128,8 +126,8 @@ Requires:	amavisd
 Requires:	qmail
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
-Obsoletes:	amavisd-postfix
 Obsoletes:	amavisd-exim
+Obsoletes:	amavisd-postfix
 Obsoletes:	amavisd-sendmail
 
 %description qmail
@@ -152,8 +150,8 @@ Requires:	amavisd
 Requires:	sendmail
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
-Obsoletes:	amavisd-postfix
 Obsoletes:	amavisd-exim
+Obsoletes:	amavisd-postfix
 Obsoletes:	amavisd-qmail
 
 %description sendmail
@@ -268,17 +266,11 @@ fi
 
 %post
 /sbin/chkconfig --add amavisd
-if [ -f /var/lock/subsys/amavisd ]; then
-	/etc/rc.d/init.d/amavisd restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/amavisd start\" to start Amavisd daemon."
-fi
+%service amavisd restart "Amavisd daemon"
 
 %preun
 if [ "$1" = "0" ];then
-	if [ -f /var/lock/subsys/amavisd ]; then
-		/etc/rc.d/init.d/amavisd stop >&2
-	fi
+	%service amavisd stop
 	/sbin/chkconfig --del amavisd
 fi
 
