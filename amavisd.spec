@@ -1,9 +1,12 @@
 %include	/usr/lib/rpm/macros.perl
+
+%bcond_with	qmail		# enable qmail
+
 Summary:	A Mail Virus Scanner - Daemon
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	0.1
-Release:	2
+Release:	6
 Epoch:		1
 License:	GPL
 Group:		Applications/Mail
@@ -22,27 +25,27 @@ URL:		http://www.amavis.org/
 BuildRequires:	arc
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	bzip2
 BuildRequires:	file
 BuildRequires:	lha
 BuildRequires:	ncompress
 BuildRequires:	perl-Archive-Tar
 BuildRequires:	perl-Archive-Zip
 BuildRequires:	perl-Compress-Zlib
+BuildRequires:	perl-Convert-TNEF
+BuildRequires:	perl-Convert-UUlib
 BuildRequires:	perl-MIME-tools
 BuildRequires:	perl-Unix-Syslog
-BuildRequires:	perl-Convert-UUlib
-BuildRequires:	perl-Convert-TNEF
 BuildRequires:	perl-libnet
-BuildRequires:	sh-utils
+BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	unarj
 BuildRequires:	unrar
 BuildRequires:	zoo
-Requires(pre): /bin/id
-Requires(pre): /usr/sbin/useradd
-Requires(postun):      /usr/sbin/userdel
 Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/useradd
 Requires:	/usr/lib/sendmail
+Requires:	amavisd-daemon
 Requires:	arc
 Requires:	bzip2
 Requires:	file
@@ -52,10 +55,11 @@ Requires:	sh-utils
 Requires:	unarj
 Requires:	unrar
 Requires:	zoo
-Requires:	amavisd-daemon
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Provides:	user(amavis)
 Obsoletes:	AMaViS
 Obsoletes:	amavis
+Obsoletes:	amavisd-new
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 AMaViS is a script that interfaces a mail transport agent (MTA) with
@@ -69,13 +73,13 @@ a jednym lub wiêcej programów antywirusowych. Wersja zdemonizowana.
 Summary:	A Mail Virus Scanner - postfix back-end
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - back-end dla postfiksa
 Group:		Applications/Mail
+Requires:	amavisd
+Requires:	postfix
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
 Obsoletes:	amavisd-exim
 Obsoletes:	amavisd-qmail
 Obsoletes:	amavisd-sendmail
-Requires:	amavisd
-Requires:	postfix
 
 %description postfix
 AMaViS is a script that interfaces a mail transport agent (MTA) with
@@ -93,13 +97,13 @@ Pakiet ten zawiera back-end dla postfiks.
 Summary:	A Mail Virus Scanner - exim backend
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla exima
 Group:		Applications/Mail
+Requires:	amavisd
+Requires:	exim
 Provides:	amavisd-daemon
 Obsoletes:	amavisd-daemon
 Obsoletes:	amavisd-postfix
 Obsoletes:	amavisd-qmail
 Obsoletes:	amavisd-sendmail
-Requires:	amavisd
-Requires:	exim
 
 %description exim
 AMaViS is a script that interfaces a mail transport agent (MTA) with
@@ -115,16 +119,16 @@ Pakiet ten zawiera back-end dla exima.
 
 # NFY
 %package qmail
-Summary:	A Mail Virus Scanner - qmail backend.
+Summary:	A Mail Virus Scanner - qmail backend
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla qmaila
 Group:		Applications/Mail
-Provides:	amavisd-daemon
-Obsoletes:	amavisd-daemon
-Obsoletes:	amavisd-postfix
-Obsoletes:	amavisd-exim
-Obsoletes:	amavisd-sendmail
 Requires:	amavisd
 Requires:	qmail
+Provides:	amavisd-daemon
+Obsoletes:	amavisd-daemon
+Obsoletes:	amavisd-exim
+Obsoletes:	amavisd-postfix
+Obsoletes:	amavisd-sendmail
 
 %description qmail
 AMaViS is a script that interfaces a mail transport agent (MTA) with
@@ -142,13 +146,13 @@ Pakiet ten zawiera back-end dla qmaila.
 Summary:	A Mail Virus Scanner - sendmail backend
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla sendmaila
 Group:		Applications/Mail
-Provides:	amavisd-daemon
-Obsoletes:	amavisd-daemon
-Obsoletes:	amavisd-postfix
-Obsoletes:	amavisd-exim
-Obsoletes:	amavisd-qmail
 Requires:	amavisd
 Requires:	sendmail
+Provides:	amavisd-daemon
+Obsoletes:	amavisd-daemon
+Obsoletes:	amavisd-exim
+Obsoletes:	amavisd-postfix
+Obsoletes:	amavisd-qmail
 
 %description sendmail
 AMaViS is a script that interfaces a mail transport agent (MTA) with
@@ -164,7 +168,7 @@ Pakiet ten zawiera back-end dla sendmaila.
 
 %define no_install_post_chrpath 1
 %prep
-%setup -q 
+%setup -q
 #-n %{name}-snapshot-%{version}
 #%patch0 -p1
 #%patch1 -p1
@@ -253,33 +257,20 @@ install amavis/{amavisd.{exim,postfix,sendmail,qmail},amavis.qmail-queue} $RPM_B
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-if [ -n "`id -u amavis 2>/dev/null`" ]; then
-       if [ "`id -u amavis`" != "97" ]; then
-               echo "Error: user amavis doesn't have uid=97. Correct this before installing amavis." 1>&2
-               exit 1
-       fi
-else
-       /usr/sbin/useradd -u 97 -r -d %{_var}/spool/amavis -s /bin/false -c "Anti Virus Checker" -g nobody  amavis 1>&2
-fi
+%useradd -u 97 -r -d %{_var}/spool/amavis -s /bin/false -c "Anti Virus Checker" -g nobody amavis
 
 %postun
 if [ "$1" = "0" ]; then
-       /usr/sbin/userdel amavis
+	%userremove amavis
 fi
 
 %post
 /sbin/chkconfig --add amavisd
-if [ -f /var/lock/subsys/amavisd ]; then
-	/etc/rc.d/init.d/amavisd restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/amavisd start\" to start Amavisd daemon."
-fi
+%service amavisd restart "Amavisd daemon"
 
 %preun
 if [ "$1" = "0" ];then
-	if [ -f /var/lock/subsys/amavisd ]; then
-		/etc/rc.d/init.d/amavisd stop >&2
-	fi
+	%service amavisd stop
 	/sbin/chkconfig --del amavisd
 fi
 
@@ -302,23 +293,29 @@ ln -sf amavisd.sendmail %{_sbindir}/amavisd
 %doc README* NEWS AUTHORS BUGS ChangeLog FAQ HINTS TODO doc/amavis.html doc/amavis.png
 %attr(755,root,root) %{_sbindir}/amavis
 %attr(754,root,root) /etc/rc.d/init.d/*
-%config(noreplace) %{_sysconfdir}/amavisd.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/amavisd.conf
 %attr(750,amavis,root) %{_var}/spool/amavis
 %attr(755,amavis,root) %{_var}/run/amavisd
 
 %files exim
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/amavisd.exim
 %ghost %attr(777,root,root) %{_sbindir}/amavisd
 
 %files postfix
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/amavisd.postfix
 %ghost %attr(777,root,root) %{_sbindir}/amavisd
 
+%if %{with qmail}
 %files qmail
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/amavis.qmail-queue
 %attr(755,root,root) %{_sbindir}/amavisd.qmail
 %ghost %attr(777,root,root) %{_sbindir}/amavisd
+%endif
 
 %files sendmail
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/amavisd.sendmail
 %ghost %attr(777,root,root) %{_sbindir}/amavisd
