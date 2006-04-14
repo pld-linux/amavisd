@@ -6,7 +6,7 @@ Summary:	A Mail Virus Scanner - Daemon
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	0.1
-Release:	6
+Release:	7
 Epoch:		1
 License:	GPL
 Group:		Applications/Mail
@@ -60,6 +60,9 @@ Obsoletes:	AMaViS
 Obsoletes:	amavis
 Obsoletes:	amavisd-new
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+# needs fix somewhere
+%undefine	with_ccache
 
 %description
 AMaViS is a script that interfaces a mail transport agent (MTA) with
@@ -185,6 +188,7 @@ rm -f missing
 %{__automake}
 %{__autoconf}
 %configure \
+	--with-sendmail-wrapper=/usr/lib/sendmail \
 	--enable-smtp \
 	--enable-postfix \
 	--enable-all \
@@ -199,6 +203,7 @@ rm -f missing
 mv amavis/amavisd amavis/amavisd.postfix
 
 %configure \
+	--with-sendmail-wrapper=/usr/lib/sendmail \
 	--disable-smtp \
 	--enable-exim \
 	--enable-all \
@@ -214,6 +219,7 @@ mv amavis/amavisd amavis/amavisd.exim
 
 #NFY
 %configure \
+	--with-sendmail-wrapper=/usr/lib/sendmail \
 	--disable-smtp \
 	--enable-qmail \
 	--enable-all \
@@ -229,6 +235,7 @@ mv amavis/amavisd amavis/amavisd.qmail
 mv amavis/amavis amavis/amavis.qmail-queue
 
 %configure \
+	--with-sendmail-wrapper=/usr/lib/sendmail \
 	--disable-smtp \
 	--enable-sendmail \
 	--enable-all \
