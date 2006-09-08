@@ -6,7 +6,7 @@ Summary:	A Mail Virus Scanner - Daemon
 Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	0.1
-Release:	7
+Release:	8
 Epoch:		1
 License:	GPL
 Group:		Applications/Mail
