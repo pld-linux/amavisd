@@ -3,7 +3,7 @@
 %bcond_with	qmail		# enable qmail
 
 Summary:	A Mail Virus Scanner - Daemon
-Summary(pl):	Antywirusowy skaner poczty elektronicznej - Demon
+Summary(pl.UTF-8):   Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	0.1
 Release:	8
@@ -68,13 +68,13 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 AMaViS is a script that interfaces a mail transport agent (MTA) with
 one or more virus scanners. This is daemonized version of amavis.
 
-%description -l pl
-AMaViS to skrypt po秗ednicz眂y pomi阣zy agentem transferu poczty (MTA)
-a jednym lub wi阠ej program體 antywirusowych. Wersja zdemonizowana.
+%description -l pl.UTF-8
+AMaViS to skrypt po艣rednicz膮cy pomi臋dzy agentem transferu poczty (MTA)
+a jednym lub wi臋cej program贸w antywirusowych. Wersja zdemonizowana.
 
 %package postfix
 Summary:	A Mail Virus Scanner - postfix back-end
-Summary(pl):	Antywirusowy skaner poczty elektronicznej - back-end dla postfiksa
+Summary(pl.UTF-8):   Antywirusowy skaner poczty elektronicznej - back-end dla postfiksa
 Group:		Applications/Mail
 Requires:	amavisd
 Requires:	postfix
@@ -90,15 +90,15 @@ one or more virus scanners. This is daemonized version of amavis.
 
 This package contains backend for postfix.
 
-%description postfix -l pl
-AMaViS to skrypt po秗ednicz眂y pomi阣zy agentem transferu poczty (MTA)
-a jednym lub wi阠ej program體 antywirusowych. Wersja zdemonizowana.
+%description postfix -l pl.UTF-8
+AMaViS to skrypt po艣rednicz膮cy pomi臋dzy agentem transferu poczty (MTA)
+a jednym lub wi臋cej program贸w antywirusowych. Wersja zdemonizowana.
 
 Pakiet ten zawiera back-end dla postfiks.
 
 %package exim
 Summary:	A Mail Virus Scanner - exim backend
-Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla exima
+Summary(pl.UTF-8):   Antywirusowy skaner poczty elektronicznej - backend dla exima
 Group:		Applications/Mail
 Requires:	amavisd
 Requires:	exim
@@ -114,16 +114,16 @@ one or more virus scanners. This is daemonized version of amavis.
 
 This package contains backend for exim.
 
-%description exim -l pl
-AMaViS to skrypt po秗ednicz眂y pomi阣zy agentem transferu poczty (MTA)
-a jednym lub wi阠ej program體 antywirusowych. Wersja zdemonizowana.
+%description exim -l pl.UTF-8
+AMaViS to skrypt po艣rednicz膮cy pomi臋dzy agentem transferu poczty (MTA)
+a jednym lub wi臋cej program贸w antywirusowych. Wersja zdemonizowana.
 
 Pakiet ten zawiera back-end dla exima.
 
 # NFY
 %package qmail
 Summary:	A Mail Virus Scanner - qmail backend
-Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla qmaila
+Summary(pl.UTF-8):   Antywirusowy skaner poczty elektronicznej - backend dla qmaila
 Group:		Applications/Mail
 Requires:	amavisd
 Requires:	qmail
@@ -139,15 +139,15 @@ one or more virus scanners. This is daemonized version of amavis.
 
 This package contains backend for qmail.
 
-%description qmail -l pl
-AMaViS to skrypt po秗ednicz眂y pomi阣zy agentem transferu poczty (MTA)
-a jednym lub wi阠ej program體 antywirusowych. Wersja zdemonizowana.
+%description qmail -l pl.UTF-8
+AMaViS to skrypt po艣rednicz膮cy pomi臋dzy agentem transferu poczty (MTA)
+a jednym lub wi臋cej program贸w antywirusowych. Wersja zdemonizowana.
 
 Pakiet ten zawiera back-end dla qmaila.
 
 %package sendmail
 Summary:	A Mail Virus Scanner - sendmail backend
-Summary(pl):	Antywirusowy skaner poczty elektronicznej - backend dla sendmaila
+Summary(pl.UTF-8):   Antywirusowy skaner poczty elektronicznej - backend dla sendmaila
 Group:		Applications/Mail
 Requires:	amavisd
 Requires:	sendmail
@@ -163,9 +163,9 @@ one or more virus scanners. This is daemonized version of amavis.
 
 This package contains backend for sendmail.
 
-%description sendmail -l pl
-AMaViS to skrypt po秗ednicz眂y pomi阣zy agentem transferu poczty (MTA)
-a jednym lub wi阠ej program體 antywirusowych. Wersja zdemonizowana.
+%description sendmail -l pl.UTF-8
+AMaViS to skrypt po艣rednicz膮cy pomi臋dzy agentem transferu poczty (MTA)
+a jednym lub wi臋cej program贸w antywirusowych. Wersja zdemonizowana.
 
 Pakiet ten zawiera back-end dla sendmaila.
 
