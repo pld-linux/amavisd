@@ -3,7 +3,7 @@
 %bcond_with	qmail		# enable qmail
 
 Summary:	A Mail Virus Scanner - Daemon
-Summary(pl.UTF-8):   Antywirusowy skaner poczty elektronicznej - Demon
+Summary(pl.UTF-8):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
 Version:	0.1
 Release:	8
@@ -74,7 +74,7 @@ a jednym lub więcej programów antywirusowych. Wersja zdemonizowana.
 
 %package postfix
 Summary:	A Mail Virus Scanner - postfix back-end
-Summary(pl.UTF-8):   Antywirusowy skaner poczty elektronicznej - back-end dla postfiksa
+Summary(pl.UTF-8):	Antywirusowy skaner poczty elektronicznej - back-end dla postfiksa
 Group:		Applications/Mail
 Requires:	amavisd
 Requires:	postfix
@@ -98,7 +98,7 @@ Pakiet ten zawiera back-end dla postfiks.
 
 %package exim
 Summary:	A Mail Virus Scanner - exim backend
-Summary(pl.UTF-8):   Antywirusowy skaner poczty elektronicznej - backend dla exima
+Summary(pl.UTF-8):	Antywirusowy skaner poczty elektronicznej - backend dla exima
 Group:		Applications/Mail
 Requires:	amavisd
 Requires:	exim
@@ -123,7 +123,7 @@ Pakiet ten zawiera back-end dla exima.
 # NFY
 %package qmail
 Summary:	A Mail Virus Scanner - qmail backend
-Summary(pl.UTF-8):   Antywirusowy skaner poczty elektronicznej - backend dla qmaila
+Summary(pl.UTF-8):	Antywirusowy skaner poczty elektronicznej - backend dla qmaila
 Group:		Applications/Mail
 Requires:	amavisd
 Requires:	qmail
@@ -147,7 +147,7 @@ Pakiet ten zawiera back-end dla qmaila.
 
 %package sendmail
 Summary:	A Mail Virus Scanner - sendmail backend
-Summary(pl.UTF-8):   Antywirusowy skaner poczty elektronicznej - backend dla sendmaila
+Summary(pl.UTF-8):	Antywirusowy skaner poczty elektronicznej - backend dla sendmaila
 Group:		Applications/Mail
 Requires:	amavisd
 Requires:	sendmail
