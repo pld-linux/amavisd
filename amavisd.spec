@@ -307,22 +307,22 @@ ln -sf amavisd.sendmail %{_sbindir}/amavisd
 %files exim
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/amavisd.exim
-%ghost %attr(777,root,root) %{_sbindir}/amavisd
+%attr(777,root,root) %ghost %{_sbindir}/amavisd
 
 %files postfix
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/amavisd.postfix
-%ghost %attr(777,root,root) %{_sbindir}/amavisd
+%attr(777,root,root) %ghost %{_sbindir}/amavisd
 
 %if %{with qmail}
 %files qmail
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/amavis.qmail-queue
 %attr(755,root,root) %{_sbindir}/amavisd.qmail
-%ghost %attr(777,root,root) %{_sbindir}/amavisd
+%attr(777,root,root) %ghost %{_sbindir}/amavisd
 %endif
 
 %files sendmail
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/amavisd.sendmail
-%ghost %attr(777,root,root) %{_sbindir}/amavisd
+%attr(777,root,root) %ghost %{_sbindir}/amavisd
