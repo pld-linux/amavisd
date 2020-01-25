@@ -2,7 +2,6 @@
 # Conditional build:
 %bcond_with	qmail		# enable qmail
 
-%include	/usr/lib/rpm/macros.perl
 Summary:	A Mail Virus Scanner - Daemon
 Summary(pl.UTF-8):	Antywirusowy skaner poczty elektronicznej - Demon
 Name:		amavisd
